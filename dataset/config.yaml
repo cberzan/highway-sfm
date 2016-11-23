@@ -1,0 +1,4 @@
+# OpenSfM will use the default parameters from opensfm/config.py
+# Set here any parameter that you want to override for this dataset
+
+triangulation_min_ray_angle: 0.3
