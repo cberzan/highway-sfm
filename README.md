@@ -1,22 +1,35 @@
-## Screenshots
+## Structure from motion (SFM) for highway driving scenes
+
+We are given five videos of driving the same stretch of highway. For example,
+one of the videos looks like this:
+
+![video 1](sample_output/1_all.gif)
+
+The goal is to estimate the relative 3D pose of the camera in each frame of
+each video (up to scale). This repo shows a way to solve this problem using a
+custom SFM pipeline built on top of
+[OpenSFM](https://github.com/mapillary/OpenSfM).
+
+The screenshots below show what the final map looks like. The cameras are
+color-coded to identify each video: red for `0_*.jpg`, green for `1_*.jpg`,
+blue for `2_*.jpg`, yellow for `3_*.jpg`, and magenta for `4_*.jpg`.  It can be
+seen clearly that the videos were taken from two different lanes.
 
 ![screenshot-1](sample_output/screenshot-1.png)
 
-The cameras are color-coded: red for `0_*.jpg`, green for `1_*.jpg`, blue for
-`2_*.jpg`, yellow for `3_*.jpg`, and magenta for `4_*.jpg`. From the point of
-view above, you can see that the videos were taken from two different lanes.
-From the point of view below, you can see the overall map.
-
 ![screenshot-2](sample_output/screenshot-2.png)
 
+The following files are provided:
 
+    dataset/        - contains the images from each video
+    sample_output/  - example output reconstruction
+    viewer/         - the viewer from opensfm, tweaked to color-code cameras
+    README.md       - you're reading it
+    clean.sh        - cleans a dataset
+    run_all.py      - runs the entire reconstruction pipeline on a dataset
 
-## Running the code
-
-My code uses building blocks from OpenSFM, and has the [same
-dependencies](https://github.com/mapillary/OpenSfM#dependencies). If you're
-having trouble getting those up and running locally, let me know and I can
-bundle my solution into a Docker container.
+The code uses building blocks from OpenSFM, and has the [same
+dependencies](https://github.com/mapillary/OpenSfM#dependencies).
 
 To build the reconstruction, run:
 
@@ -24,10 +37,10 @@ To build the reconstruction, run:
     PYTHONPATH=$OPENSFM_INSTALL_DIR ./run_all.py dataset
 
 where `$OPENSFM_INSTALL_DIR` is wherever you installed OpenSFM. Note that
-there is a lot of RANSAC going on, so you get slightly different results each
-time you run the above. Two or three runs should be enough to get a
-reconstruction as good as the one provided in
-`sample_output/reconstruction.json` and shown in the screenshots above.
+because of RANSAC, you may get slightly different results each time you run the
+above. Two or three runs should be enough to get a reconstruction as good as
+the one provided in `sample_output/reconstruction.json` and shown in the
+screenshots above.
 
 To visualize the reconstruction, run:
 
@@ -42,24 +55,11 @@ instead.
 
 
 
-## Files provided
-
-    dataset/        - contains the images from the challenge
-    sample_output/  - example output reconstruction
-    viewer/         - the viewer from opensfm, tweaked to color-code cameras
-    README.md       - you're reading it
-    clean.sh        - cleans a dataset
-    run_all.py      - runs the entire reconstruction pipeline on a dataset
-
-
-
-## Overview of my approach
+## How it works
 
 First, I wanted to see how far I could get by just using OpenSFM out of the
-box. If this were enough to solve the problem, I would at least have a
-reference solution before starting to implement my own. But out-of-the-box
-OpenSFM produced a pretty bad reconstruction, so I dug in to figure out how
-to improve it.
+box. It turned out that out-of-the-box OpenSFM produced a pretty bad
+reconstruction, so I dug in to figure out how to improve it.
 
 
 #### A sketch of the OpenSFM reconstruction pipeline
